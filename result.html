@@ -1,0 +1,153 @@
+
+{% extends "base.html" %}
+
+{% block title %}Prediction Result | TrafficSense AI{% endblock %}
+
+{% block content %}
+
+{% set traffic_level = level|string|lower %}
+
+<!-- Result hero -->
+<section class="result-hero">
+    <img
+        src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=1600"
+        alt="Modern city skyline and roads"
+    >
+    <div class="result-hero-content">
+        <span class="result-tag">✓ PREDICTION COMPLETED</span>
+        <h1>Your traffic<br><span>outlook.</span></h1>
+        <p>Your machine learning prediction report is ready.</p>
+    </div>
+</section>
+
+<!-- Main result card -->
+<section class="result-main-card">
+
+    <div class="result-card-top">
+        <div>
+            <span class="result-label">AI TRAFFIC ESTIMATION</span>
+            <h2>Prediction summary</h2>
+        </div>
+        <div class="result-success">
+            <span class="result-success-dot"></span>
+            Complete
+        </div>
+    </div>
+
+    <div class="result-number-section">
+        <div class="result-number-label">
+            Estimated vehicles per hour
+        </div>
+
+        <div class="result-number">
+            {{ "{:,.0f}".format(volume) }}
+        </div>
+
+        <div class="result-unit">VEHICLES / HOUR</div>
+    </div>
+
+    <!-- Congestion band -->
+    <div class="result-level-box
+        {% if 'high' in traffic_level %}level-high
+        {% elif 'medium' in traffic_level %}level-medium
+        {% else %}level-low{% endif %}">
+
+        <div>
+            <span class="result-label">PREDICTED TRAFFIC BAND</span>
+            <h2>{{ level }} Traffic</h2>
+            <p>Traffic volume classification by your trained model.</p>
+        </div>
+
+        <div class="result-level-icon">
+            {% if 'high' in traffic_level %}
+                !
+            {% elif 'medium' in traffic_level %}
+                ≋
+            {% else %}
+                ✓
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Visual traffic indicator -->
+    <div class="traffic-meter-section">
+        <h3>Traffic volume indicator</h3>
+        <p>Visual representation of the predicted traffic category.</p>
+
+        <div class="traffic-meter">
+            <div class="meter-segment meter-low"></div>
+            <div class="meter-segment meter-medium"></div>
+            <div class="meter-segment meter-high"></div>
+        </div>
+
+        <div class="meter-labels">
+            <span>Low</span>
+            <span>Medium</span>
+            <span>High</span>
+        </div>
+
+        <div class="meter-current">
+            Current prediction:
+            <strong>{{ level }}</strong>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="result-actions">
+        <a href="/" class="result-primary-button">
+            ← New Prediction
+        </a>
+
+        <a href="/dashboard" class="result-secondary-button">
+            View Analytics →
+        </a>
+    </div>
+
+</section>
+
+<!-- Additional information -->
+<section class="result-info-grid">
+
+    <div class="result-info-card">
+        <div class="result-info-icon">🤖</div>
+        <h3>Machine Learning</h3>
+        <p>Prediction generated using the project's trained machine learning models.</p>
+    </div>
+
+    <div class="result-info-card">
+        <div class="result-info-icon">📊</div>
+        <h3>Data Analysis</h3>
+        <p>Estimated hourly vehicle volume and relative traffic classification.</p>
+    </div>
+
+    <div class="result-info-card">
+        <div class="result-info-icon">🏙️</div>
+        <h3>Smart Mobility</h3>
+        <p>Use traffic estimates to understand possible changes in road activity.</p>
+    </div>
+
+</section>
+
+<!-- Image section -->
+<section class="result-image-section">
+    <img
+        src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1200"
+        alt="Urban city road network"
+        loading="lazy"
+    >
+
+    <div class="result-image-overlay">
+        <span>TRAFFICSENSE AI</span>
+        <h2>Smarter insights.<br>Better traffic understanding.</h2>
+        <a href="/dashboard">Explore your dashboard →</a>
+    </div>
+</section>
+
+<p class="result-disclaimer">
+    <strong>Note:</strong> This is an estimated traffic volume based on
+    historical data and supplied conditions. Traffic bands represent
+    relative volume categories, not official congestion grades.
+    This is not a live traffic feed.
+</p>
+
+{% endblock %}

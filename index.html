@@ -1,0 +1,325 @@
+
+{% extends "base.html" %}
+
+{% block title %}Traffic Prediction | TrafficSense AI{% endblock %}
+
+{% block content %}
+
+<!-- Hero banner -->
+<section class="prediction-hero">
+    <img
+        src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=1600"
+        alt="Modern city traffic"
+    >
+    <div class="prediction-hero-content">
+        <span class="prediction-tag">SMART MOBILITY INTELLIGENCE</span>
+        <h1>Understand traffic<br><span>before it builds.</span></h1>
+        <p>
+            Predict hourly traffic volume and understand traffic intensity
+            using machine learning and historical weather patterns.
+        </p>
+        <a href="#prediction-form" class="hero-button">
+            Start Prediction ↓
+        </a>
+    </div>
+</section>
+
+<!-- Model information cards -->
+<section class="prediction-stats">
+
+    <div class="prediction-stat">
+        <div class="prediction-stat-icon">🤖</div>
+        <small>Best Regressor</small>
+        <h3>{{ metrics.best_regressor }}</h3>
+        <span>Traffic volume prediction</span>
+    </div>
+
+    <div class="prediction-stat">
+        <div class="prediction-stat-icon">🧠</div>
+        <small>Best Classifier</small>
+        <h3>{{ metrics.best_classifier }}</h3>
+        <span>Traffic intensity classification</span>
+    </div>
+
+    <div class="prediction-stat">
+        <div class="prediction-stat-icon">📊</div>
+        <small>Test Observations</small>
+        <h3>{{ metrics.test_rows }}</h3>
+        <span>Model testing records</span>
+    </div>
+
+</section>
+
+<!-- Main prediction area -->
+<section class="prediction-layout" id="prediction-form">
+
+    <div class="prediction-form-panel">
+
+        <div class="prediction-section-heading">
+            <span class="prediction-tag">AI POWERED ESTIMATION</span>
+            <h2>Traffic prediction</h2>
+            <p>Enter road and weather conditions to generate a prediction.</p>
+        </div>
+
+        <form action="/predict" method="post">
+
+            <div class="form-field">
+                <label for="date_time">📅 Date & Time</label>
+                <input
+                    id="date_time"
+                    type="datetime-local"
+                    name="date_time"
+                    value="2018-09-30T17:00"
+                    required
+                >
+            </div>
+
+            <div class="prediction-field-grid">
+
+                <div class="form-field">
+                    <label for="temp">🌡️ Temperature (K)</label>
+                    <input
+                        id="temp"
+                        name="temp"
+                        type="number"
+                        step=".1"
+                        value="288.15"
+                        required
+                    >
+                </div>
+
+                <div class="form-field">
+                    <label for="clouds_all">☁️ Cloud Cover (%)</label>
+                    <input
+                        id="clouds_all"
+                        name="clouds_all"
+                        type="number"
+                        min="0"
+                        max="100"
+                        value="40"
+                        required
+                    >
+                </div>
+
+                <div class="form-field">
+                    <label for="rain_1h">🌧️ Rain (mm/hour)</label>
+                    <input
+                        id="rain_1h"
+                        name="rain_1h"
+                        type="number"
+                        step=".1"
+                        value="0"
+                        required
+                    >
+                </div>
+
+                <div class="form-field">
+                    <label for="snow_1h">❄️ Snow (mm/hour)</label>
+                    <input
+                        id="snow_1h"
+                        name="snow_1h"
+                        type="number"
+                        step=".1"
+                        value="0"
+                        required
+                    >
+                </div>
+
+                <div class="form-field">
+                    <label for="weather_main">🌤️ Weather Condition</label>
+                    <select name="weather_main" id="weather_main" required>
+                        {% for w in ['Clear','Clouds','Rain','Drizzle','Mist','Snow','Fog','Thunderstorm','Haze'] %}
+                        <option value="{{ w }}">{{ w }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-field">
+                    <label for="holiday">🎉 Holiday</label>
+                    <select name="holiday" id="holiday" required>
+                        <option value="None">None</option>
+                        <option value="Christmas Day">Christmas Day</option>
+                        <option value="New Years Day">New Years Day</option>
+                        <option value="Independence Day">Independence Day</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <button type="submit" class="prediction-submit">
+                Generate Traffic Prediction
+                <span>→</span>
+            </button>
+
+            <p class="form-security-note">
+                ✓ Your inputs are processed by the project's trained ML models.
+            </p>
+
+        </form>
+    </div>
+
+    <!-- Model performance panel -->
+    <aside class="model-info-panel">
+
+        <div class="model-info-heading">
+            <span class="prediction-tag">MODEL INTELLIGENCE</span>
+            <h2>Model performance</h2>
+            <p>Performance of your selected machine learning models.</p>
+        </div>
+
+        <div class="performance-item">
+            <div>
+                <span>R² Score</span>
+                <strong>{{ metrics.regression[metrics.best_regressor].R2 }}</strong>
+            </div>
+            <div class="performance-track">
+                <div class="performance-fill performance-blue"></div>
+            </div>
+            <small>Regression performance</small>
+        </div>
+
+        <div class="performance-item">
+            <div>
+                <span>MAE</span>
+                <strong>{{ metrics.regression[metrics.best_regressor].MAE }}</strong>
+            </div>
+            <small>Average absolute prediction error in vehicles/hour</small>
+        </div>
+
+        <div class="performance-item">
+            <div>
+                <span>Classification Accuracy</span>
+                <strong>{{ (metrics.classification[metrics.best_classifier].accuracy*100)|round(2) }}%</strong>
+            </div>
+            <div class="performance-track">
+                <div
+                    class="performance-fill performance-green"
+                    style="width: {{ (metrics.classification[metrics.best_classifier].accuracy*100)|round(2) }}%">
+                </div>
+            </div>
+            <small>Selected classifier accuracy</small>
+        </div>
+
+        <div class="model-info-footer">
+            <span class="active-dot"></span>
+            Machine learning models available
+        </div>
+
+        <a href="/dashboard" class="analytics-link">
+            Explore Analytics Dashboard →
+        </a>
+
+    </aside>
+
+</section>
+
+<!-- Traffic information images -->
+<section class="prediction-visual-section">
+
+    <div class="prediction-section-heading">
+        <span class="prediction-tag">SMART CITY TECHNOLOGY</span>
+        <h2>Intelligent traffic monitoring</h2>
+        <p>Machine learning helps understand changing traffic patterns.</p>
+    </div>
+
+    <div class="prediction-image-grid">
+
+        <div class="prediction-image-card">
+            <img
+                src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=900"
+                alt="Urban transport"
+                loading="lazy"
+            >
+            <div>
+                <h3>Urban Mobility</h3>
+                <p>Understand city transportation patterns.</p>
+            </div>
+        </div>
+
+        <div class="prediction-image-card">
+            <img
+                src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=900"
+                alt="City roads"
+                loading="lazy"
+            >
+            <div>
+                <h3>Road Network</h3>
+                <p>Analyze traffic volume and road activity.</p>
+            </div>
+        </div>
+
+        <div class="prediction-image-card">
+            <img
+                src="https://images.unsplash.com/photo-1519608487953-e999c86e7455?w=900"
+                alt="Smart city at night"
+                loading="lazy"
+            >
+            <div>
+                <h3>Smart City</h3>
+                <p>Explore technology-driven traffic management.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- Batch CSV upload -->
+<section class="batch-upload-panel">
+
+    <div class="batch-upload-content">
+        <span class="prediction-tag">BULK PREDICTION</span>
+        <h2>Batch CSV prediction</h2>
+        <p>
+            Upload a CSV file to generate traffic predictions
+            for multiple records.
+        </p>
+
+        <div class="csv-format">
+            <strong>Required CSV columns</strong>
+            <p>
+                date_time, temp, rain_1h, snow_1h,
+                clouds_all, weather_main, holiday
+            </p>
+        </div>
+
+        <form action="/batch" method="post" enctype="multipart/form-data">
+
+            <div class="form-field">
+                <label for="csv-file">📁 Select CSV file</label>
+                <input
+                    id="csv-file"
+                    type="file"
+                    name="file"
+                    accept=".csv"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="prediction-submit">
+                Upload & Predict →
+            </button>
+
+        </form>
+    </div>
+
+    <div class="batch-upload-image">
+        <img
+            src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=900"
+            alt="Modern city skyline"
+            loading="lazy"
+        >
+    </div>
+
+</section>
+
+<!-- Project disclaimer -->
+<section class="prediction-disclaimer">
+    <strong>About this prediction system</strong>
+    <p>
+        Scope: UCI data describes one I-94 corridor in Minnesota.
+        Low, Medium and High are relative volume quantiles,
+        not official congestion grades. This system is not a live traffic feed.
+    </p>
+</section>
+
+{% endblock %}

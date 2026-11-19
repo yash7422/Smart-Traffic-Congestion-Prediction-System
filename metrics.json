@@ -1,0 +1,104 @@
+{
+  "dataset_rows": 48204,
+  "train_rows": 38563,
+  "test_rows": 9641,
+  "thresholds": {
+    "low_upper": 2158.0,
+    "medium_upper": 4591.0
+  },
+  "regression": {
+    "Random Forest": {
+      "MAE": 301.31,
+      "RMSE": 535.95,
+      "R2": 0.9258
+    },
+    "Extra Trees": {
+      "MAE": 304.68,
+      "RMSE": 543.31,
+      "R2": 0.9238
+    },
+    "Hist Gradient Boosting": {
+      "MAE": 288.62,
+      "RMSE": 509.8,
+      "R2": 0.9329
+    },
+    "XGBoost": {
+      "MAE": 288.68,
+      "RMSE": 506.6,
+      "R2": 0.9337
+    }
+  },
+  "classification": {
+    "Random Forest": {
+      "accuracy": 0.8761,
+      "precision_macro": 0.8778,
+      "recall_macro": 0.8767,
+      "f1_macro": 0.8771,
+      "confusion_matrix": [
+        [
+          2921,
+          234,
+          35
+        ],
+        [
+          151,
+          2742,
+          419
+        ],
+        [
+          0,
+          356,
+          2783
+        ]
+      ]
+    },
+    "Extra Trees": {
+      "accuracy": 0.8627,
+      "precision_macro": 0.8642,
+      "recall_macro": 0.8634,
+      "f1_macro": 0.8637,
+      "confusion_matrix": [
+        [
+          2898,
+          253,
+          39
+        ],
+        [
+          192,
+          2672,
+          448
+        ],
+        [
+          6,
+          386,
+          2747
+        ]
+      ]
+    },
+    "Hist Gradient Boosting": {
+      "accuracy": 0.8882,
+      "precision_macro": 0.8896,
+      "recall_macro": 0.889,
+      "f1_macro": 0.8889,
+      "confusion_matrix": [
+        [
+          2940,
+          205,
+          45
+        ],
+        [
+          130,
+          2764,
+          418
+        ],
+        [
+          5,
+          275,
+          2859
+        ]
+      ]
+    }
+  },
+  "best_regressor": "Hist Gradient Boosting",
+  "best_classifier": "Hist Gradient Boosting"
+}
